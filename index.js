@@ -44,13 +44,13 @@ app.post('/salvarpergunta', (req, res) => {
       res.send(error);
     }
   })();
-
-  // Pergunta.create({
-  //   titulo: req.body.titulo,
-  //   description: req.body.descricao,
-  // }).then(() => {
-  //   res.redirect('/');
-  // });
 });
 
+app.get('/pergunta/:id', (req, res) => {
+  const id = req.params.id;
+
+  Pergunta.findOne({
+    where: { id: id },
+  }).then((pergunta) => console.log(pergunta));
+});
 app.listen(8181, (error) => console.log('Servidor Iniciado com Sucesso'));
