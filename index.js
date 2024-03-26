@@ -46,11 +46,19 @@ app.post('/salvarpergunta', (req, res) => {
   })();
 });
 
-app.get('/pergunta/:id', (req, res) => {
+app.get('/pergunta/:id', async (req, res) => {
   const id = req.params.id;
 
-  Pergunta.findOne({
+  const pergunta = await Pergunta.findOne({
     where: { id: id },
-  }).then((pergunta) => console.log(pergunta));
+  });
+
+  if (pergunta) {
+    res.render('pergunta', {
+      pergunta,
+    });
+  } else {
+    res.redirect('/');
+  }
 });
 app.listen(8181, (error) => console.log('Servidor Iniciado com Sucesso'));
