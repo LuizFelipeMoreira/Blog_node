@@ -60,4 +60,16 @@ app.get('/pergunta/:id', async (req, res) => {
     res.redirect('/');
   }
 });
+
+app.post('/responder', async (req, res) => {
+  const { corpo, pergunta: perguntaID } = req.body;
+
+  try {
+    await Resposta.create({ corpo, perguntaID });
+    res.redirect(`/pergunta/${perguntaID}`);
+  } catch (error) {
+    if (error) throw console.error(`Erro ao enviar resposta: ${error}`);
+  }
+});
+
 app.listen(8181, (error) => console.log('Servidor Iniciado com Sucesso'));
