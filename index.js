@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const connection = require('./database/database');
 const Pergunta = require('./database/Pergunta');
 const Resposta = require('./database/Resposta');
+const { where } = require('sequelize');
 
 connection
   .authenticate()
@@ -48,14 +49,18 @@ app.post('/salvarpergunta', (req, res) => {
 app.get('/pergunta/:id', async (req, res) => {
   const id = req.params.id;
 
-  const pergunta = await Pergunta.findOne({
-    where: { id: id },
-  });
+  const pergunta = await Pergunta.findOne({ where: { id: id } });
 
   if (pergunta) {
-    res.render('pergunta', {
-      pergunta,
-    });
+    try {
+      const respostas = await Resposta.findAll({
+        where: { perguntaID: pergunta.id },
+        order: [['id', 'DESC']],
+      });
+      res.render('pergunta', { pergunta, respostas });
+    } catch (error) {
+      console.error(error);
+    }
   } else {
     res.redirect('/');
   }
